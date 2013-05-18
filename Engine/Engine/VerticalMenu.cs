@@ -50,30 +50,38 @@ namespace Engine
             bool controlPadDown = false;
             bool controlPadUp = false;
 
-            float invertY = _input.Controller.LeftControlStick.Y * -1;
+            if (_input.Controller != null)
+            {
+                float invertY = _input.Controller.LeftControlStick.Y * -1;
 
-            if(invertY < -0.2) {
-                // The control stick is pulled down
-                if(_inDown == false) {
-                    controlPadDown = true;
-                    _inDown = true;
+                if (invertY < -0.2)
+                {
+                    // The control stick is pulled down
+                    if (_inDown == false)
+                    {
+                        controlPadDown = true;
+                        _inDown = true;
+                    }
+                }
+                else
+                {
+                    _inDown = false;
+                }
+
+                if (invertY > 0.2)
+                {
+                    if (_inUp == false)
+                    {
+                        controlPadUp = true;
+                        _inUp = true;
+                    }
+                }
+
+                else
+                {
+                    _inUp = false;
                 }
             }
-            else {
-                _inDown = false;
-            }
-
-            if(invertY > 0.2) {
-                if(_inUp == false) {
-                    controlPadUp = true;
-                    _inUp = true;
-                }
-            }
-
-            else {
-                _inUp = false;
-            }
-
             if(_input.Keyboard.IsKeyPressed(Keys.Down) || controlPadDown) {
                 OnDown();
             }
@@ -81,7 +89,7 @@ namespace Engine
                 OnUp();
             }
 
-            else if (_input.Keyboard.IsKeyPressed(Keys.Enter) || _input.Controller.ButtonA.Pressed)
+            else if (_input.Keyboard.IsKeyPressed(Keys.Enter) || (_input.Controller != null && _input.Controller.ButtonA.Pressed))
             {
                 OnButtonPress();
             }
