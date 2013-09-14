@@ -207,5 +207,7 @@ namespace Engine
             _rotation = rotation;
         }
 
+
+        public static int Speed { get; set; }
     }
 }
