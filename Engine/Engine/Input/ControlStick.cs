@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Tao.Sdl;
 
 namespace Engine.Input
 {
     public class ControlStick
     {
-        IntPtr _joystick;
-        int _axisIdX = 0;
-        int _axisIdY = 0;
-        float _deadZone = 0.2f;
-        public float X { get; private set; }
-        public float Y { get; private set; }
+        private readonly int _axisIdX;
+        private readonly int _axisIdY;
+        private readonly IntPtr _joystick;
+        private float _deadZone = 0.2f;
 
         public ControlStick(IntPtr joystick, int axisIdX, int axisIdY)
         {
@@ -21,6 +16,9 @@ namespace Engine.Input
             _axisIdX = axisIdX;
             _axisIdY = axisIdY;
         }
+
+        public float X { get; private set; }
+        public float Y { get; private set; }
 
         public void Update()
         {
@@ -30,7 +28,7 @@ namespace Engine.Input
 
         private float MapMinusOneToOne(short value)
         {
-            float output = ((float)value / short.MaxValue);
+            float output = ((float) value/short.MaxValue);
 
             // Be careful of rounding error
             output = Math.Min(output, 1.0f);

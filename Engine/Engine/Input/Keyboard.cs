@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -9,59 +7,22 @@ namespace Engine.Input
 {
     public class Keyboard
     {
-        [DllImport("User32.dll")]
-        public static extern short GetAsyncKeyState(int vKey);
-
-        Control _openGLControl;
+        private readonly Dictionary<Keys, KeyState> _keyStates = new Dictionary<Keys, KeyState>();
         public KeyPressEventHandler KeyPressEvent;
-
-        class KeyState
-        {
-            bool _keyPressDetected = false;
-            public bool Held { get; set; }
-            public bool Pressed { get; set; }
-
-            public KeyState()
-            {
-                Held = false;
-                Pressed = false;
-            }
-
-            internal void OnDown()
-            {
-                if (Held == false)
-                {
-                    _keyPressDetected = true;
-                }
-                Held = true;
-            }
-
-            internal void OnUp()
-            {
-                Held = false;
-            }
-
-            internal void Process()
-            {
-                Pressed = false;
-                if (_keyPressDetected)
-                {
-                    Pressed = true;
-                    _keyPressDetected = false;
-                }
-            }
-        }
-        Dictionary<Keys, KeyState> _keyStates = new Dictionary<Keys, KeyState>();
+        private Control _openGLControl;
 
         public Keyboard(Control openGLControl)
         {
             _openGLControl = openGLControl;
-            _openGLControl.KeyDown += new KeyEventHandler(OnKeyDown);
-            _openGLControl.KeyUp += new KeyEventHandler(OnKeyUp);
-            _openGLControl.KeyPress += new KeyPressEventHandler(OnKeyPress);
+            _openGLControl.KeyDown += OnKeyDown;
+            _openGLControl.KeyUp += OnKeyUp;
+            _openGLControl.KeyPress += OnKeyPress;
         }
 
-        void OnKeyPress(object sender, KeyPressEventArgs e)
+        [DllImport("User32.dll")]
+        public static extern short GetAsyncKeyState(int vKey);
+
+        private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             if (KeyPressEvent != null)
             {
@@ -69,13 +30,13 @@ namespace Engine.Input
             }
         }
 
-        void OnKeyUp(object sender, KeyEventArgs e)
+        private void OnKeyUp(object sender, KeyEventArgs e)
         {
             EnsureKeyStateExists(e.KeyCode);
             _keyStates[e.KeyCode].OnUp();
         }
 
-        void OnKeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
             EnsureKeyStateExists(e.KeyCode);
             _keyStates[e.KeyCode].OnDown();
@@ -114,7 +75,7 @@ namespace Engine.Input
 
         private bool PollKeyPress(Keys key)
         {
-            return (GetAsyncKeyState((int)key) != 0);
+            return (GetAsyncKeyState((int) key) != 0);
         }
 
         private void ProcessControlKeys()
@@ -137,6 +98,43 @@ namespace Engine.Input
                 OnKeyUp(this, new KeyEventArgs(keys));
             }
         }
-    }
 
+        private class KeyState
+        {
+            private bool _keyPressDetected;
+
+            public KeyState()
+            {
+                Held = false;
+                Pressed = false;
+            }
+
+            public bool Held { get; set; }
+            public bool Pressed { get; set; }
+
+            internal void OnDown()
+            {
+                if (Held == false)
+                {
+                    _keyPressDetected = true;
+                }
+                Held = true;
+            }
+
+            internal void OnUp()
+            {
+                Held = false;
+            }
+
+            internal void Process()
+            {
+                Pressed = false;
+                if (_keyPressDetected)
+                {
+                    Pressed = true;
+                    _keyPressDetected = false;
+                }
+            }
+        }
+    }
 }

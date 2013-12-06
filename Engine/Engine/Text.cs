@@ -1,18 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Engine
 {
     public class Text
     {
-        Font _font;
-        List<CharacterSprite> _bitmapText = new List<CharacterSprite>();
-        string _text;
-        Color _color = new Color(1, 1, 1, 1);
-        Vector _dimensions;
-        int _maxWidth = -1;
+        private readonly List<CharacterSprite> _bitmapText = new List<CharacterSprite>();
+        private readonly Font _font;
+        private readonly int _maxWidth = -1;
+        private readonly string _text;
+        private Color _color = new Color(1, 1, 1, 1);
+        private Vector _dimensions;
+
+        public Text(string text, Font font) : this(text, font, -1)
+        {
+        }
+
+        public Text(string text, Font font, int maxWidth)
+        {
+            _text = text;
+            _font = font;
+            _maxWidth = maxWidth;
+            CreateText(0, 0, _maxWidth);
+        }
 
         public double Width
         {
@@ -27,16 +36,6 @@ namespace Engine
         public List<CharacterSprite> CharacterSprites
         {
             get { return _bitmapText; }
-        }
-
-        
-        public Text(string text, Font font) : this(text, font, -1) { }
-        public Text(string text, Font font, int maxWidth)
-        {
-            _text = text;
-            _font = font;
-            _maxWidth = maxWidth;
-            CreateText(0, 0, _maxWidth);
         }
 
 
@@ -69,8 +68,8 @@ namespace Engine
                 foreach (char c in wordWithSpace)
                 {
                     CharacterSprite sprite = _font.CreateSprite(c);
-                    float xOffset = ((float)sprite.Data.XOffset) / 2;
-                    float yOffset = (((float)sprite.Data.Height) * 0.5f) + ((float)sprite.Data.YOffset);
+                    float xOffset = ((float) sprite.Data.XOffset)/2;
+                    float yOffset = (sprite.Data.Height*0.5f) + sprite.Data.YOffset;
                     sprite.Sprite.SetPosition(x + currentX + xOffset, y - currentY - yOffset);
                     currentX += sprite.Data.XAdvance;
                     _bitmapText.Add(sprite);

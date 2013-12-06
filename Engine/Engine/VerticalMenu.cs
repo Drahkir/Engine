@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Engine.Input;
 using System.Windows.Forms;
 
 namespace Engine
 {
     public class VerticalMenu
     {
-        Vector _position = new Vector();
-        Input.Input _input;
-        List<Button> _buttons = new List<Button>();
-        public double Spacing { get; set; }
+        private readonly List<Button> _buttons = new List<Button>();
+        private readonly Input.Input _input;
+        private int _currentFocus;
 
         // Input Handling
-        bool _inDown = false;
-        bool _inUp = false;
-        int _currentFocus = 0;
+        private bool _inDown;
+        private bool _inUp;
+        private Vector _position;
 
         public VerticalMenu(double x, double y, Input.Input input)
         {
@@ -25,6 +21,8 @@ namespace Engine
             _position = new Vector(x, y, 0);
             Spacing = 50;
         }
+
+        public double Spacing { get; set; }
 
         public void AddButton(Button button)
         {
@@ -46,13 +44,14 @@ namespace Engine
             _buttons.Add(button);
         }
 
-        public void HandleInput() {
+        public void HandleInput()
+        {
             bool controlPadDown = false;
             bool controlPadUp = false;
 
             if (_input.Controller != null)
             {
-                float invertY = _input.Controller.LeftControlStick.Y * -1;
+                float invertY = _input.Controller.LeftControlStick.Y*-1;
 
                 if (invertY < -0.2)
                 {
@@ -82,14 +81,17 @@ namespace Engine
                     _inUp = false;
                 }
             }
-            if(_input.Keyboard.IsKeyPressed(Keys.Down) || controlPadDown) {
+            if (_input.Keyboard.IsKeyPressed(Keys.Down) || controlPadDown)
+            {
                 OnDown();
             }
-            else if(_input.Keyboard.IsKeyPressed(Keys.Up) || controlPadUp) {
+            else if (_input.Keyboard.IsKeyPressed(Keys.Up) || controlPadUp)
+            {
                 OnUp();
             }
 
-            else if (_input.Keyboard.IsKeyPressed(Keys.Enter) || (_input.Controller != null && _input.Controller.ButtonA.Pressed))
+            else if (_input.Keyboard.IsKeyPressed(Keys.Enter) ||
+                     (_input.Controller != null && _input.Controller.ButtonA.Pressed))
             {
                 OnButtonPress();
             }
@@ -112,11 +114,13 @@ namespace Engine
             ChangeFocus(oldFocus, _currentFocus);
         }
 
-        private void OnUp() {
+        private void OnUp()
+        {
             int oldFocus = _currentFocus;
             _currentFocus--;
 
-            if(_currentFocus == -1) {
+            if (_currentFocus == -1)
+            {
                 _currentFocus = (_buttons.Count - 1);
             }
 
@@ -131,6 +135,7 @@ namespace Engine
                 _buttons[to].OnGainFocus();
             }
         }
+
         public void Render(Renderer renderer)
         {
             _buttons.ForEach(x => x.Render(renderer));

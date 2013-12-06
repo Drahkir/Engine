@@ -1,29 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Engine.Input
 {
     public class Mouse
     {
-        Form _parentForm;
-        Control _openGLControl;
+        private readonly Control _openGLControl;
+        private readonly Form _parentForm;
 
-        public Point Position { get; set; }
-
-        bool _leftClickDetect = false;
-        bool _rightClickDetect = false;
-        bool _middleClickDetect = false;
-
-        public bool MiddlePressed { get; private set; }
-        public bool LeftPressed { get; private set; }
-        public bool RightPressed { get; private set; }
-
-        public bool MiddleHeld { get; private set; }
-        public bool LeftHeld { get; private set; }
-        public bool RightHeld { get; set; }
+        private bool _leftClickDetect;
+        private bool _middleClickDetect;
+        private bool _rightClickDetect;
 
         public Mouse(Form form, Control openGLControl)
         {
@@ -78,7 +64,7 @@ namespace Engine.Input
                 }
             };
 
-            _openGLControl.MouseLeave += delegate(object obj, EventArgs e)
+            _openGLControl.MouseLeave += delegate
             {
                 // If you move the mouse out the window then release all held buttons
                 LeftHeld = false;
@@ -87,13 +73,24 @@ namespace Engine.Input
             };
         }
 
+        public Point Position { get; set; }
+
+        public bool MiddlePressed { get; private set; }
+        public bool LeftPressed { get; private set; }
+        public bool RightPressed { get; private set; }
+
+        public bool MiddleHeld { get; private set; }
+        public bool LeftHeld { get; private set; }
+        public bool RightHeld { get; set; }
+
         public void Update(double elapsedTime)
         {
             UpdateMousePosition();
             UpdateMouseButtons();
         }
 
-        private void UpdateMouseButtons() {
+        private void UpdateMouseButtons()
+        {
             // Reset buttons
             MiddlePressed = false;
             LeftPressed = false;
@@ -122,9 +119,9 @@ namespace Engine.Input
             mousePos = _openGLControl.PointToClient(mousePos);
 
             // Now use our point definition
-            Engine.Point adjustedMousePoint = new Engine.Point();
-            adjustedMousePoint.X = (float)mousePos.X - ((float)_parentForm.ClientSize.Width / 2);
-            adjustedMousePoint.Y = ((float)_parentForm.ClientSize.Height / 2) - (float)mousePos.Y;
+            var adjustedMousePoint = new Point();
+            adjustedMousePoint.X = mousePos.X - ((float) _parentForm.ClientSize.Width/2);
+            adjustedMousePoint.Y = ((float) _parentForm.ClientSize.Height/2) - mousePos.Y;
             Position = adjustedMousePoint;
         }
     }

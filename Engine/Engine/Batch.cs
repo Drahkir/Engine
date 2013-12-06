@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tao.OpenGl;
+﻿using Tao.OpenGl;
 
 namespace Engine
 {
     public class Batch
     {
-        const int MaxVertexNumber = 1000;
-        Vector[] _vertexPositions = new Vector[MaxVertexNumber];
-        Color[] _vertexColors = new Color[MaxVertexNumber];
-        Point[] _vertexUVs = new Point[MaxVertexNumber];
-        const int VertexDimensions = 3;
-        const int ColorDimensions = 4;
-        const int UVDimensions = 2;
-        int _batchSize = 0;
+        private const int MaxVertexNumber = 1000;
+        private const int VertexDimensions = 3;
+        private const int ColorDimensions = 4;
+        private const int UVDimensions = 2;
+        private readonly Color[] _vertexColors = new Color[MaxVertexNumber];
+        private readonly Vector[] _vertexPositions = new Vector[MaxVertexNumber];
+        private readonly Point[] _vertexUVs = new Point[MaxVertexNumber];
+        private int _batchSize;
 
         public void AddSprite(Sprite sprite)
         {
@@ -35,7 +31,7 @@ namespace Engine
             _batchSize += sprite.VertexPositions.Length;
         }
 
-        void SetupPointers()
+        private void SetupPointers()
         {
             Gl.glEnableClientState(Gl.GL_COLOR_ARRAY);
             Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY);
@@ -56,8 +52,5 @@ namespace Engine
             Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, _batchSize);
             _batchSize = 0;
         }
-
     }
-
-
 }

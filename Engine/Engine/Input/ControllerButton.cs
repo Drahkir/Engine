@@ -1,25 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Tao.Sdl;
 
 namespace Engine.Input
 {
     public class ControllerButton
     {
-        IntPtr _joystick;
-        int _buttonId;
+        private readonly int _buttonId;
+        private readonly IntPtr _joystick;
 
-        public bool Held { get; private set; }
-        bool _wasHeld = false;
-        public bool Pressed { get; private set; }
+        private bool _wasHeld;
 
         public ControllerButton(IntPtr joystick, int buttonId)
         {
             _joystick = joystick;
             _buttonId = buttonId;
         }
+
+        public bool Held { get; private set; }
+        public bool Pressed { get; private set; }
 
         public void Update()
         {

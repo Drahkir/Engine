@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Engine
+﻿namespace Engine
 {
     public class Sprite
     {
         internal const int VertexAmount = 6;
-        Vector[] _vertexPositions = new Vector[VertexAmount];
-        Color[] _vertexColors = new Color[VertexAmount];
-        Point[] _vertexUVs = new Point[VertexAmount];
-        Texture _texture = new Texture();
-        double _scaleX = 1;
-        double _scaleY = 1;
-        double _rotation = 0;
-        double _positionX = 0;
-        double _positionY = 0;
+        private readonly Color[] _vertexColors = new Color[VertexAmount];
+        private readonly Vector[] _vertexPositions = new Vector[VertexAmount];
+        private readonly Point[] _vertexUVs = new Point[VertexAmount];
+        private double _positionX;
+        private double _positionY;
+        private double _rotation;
+        private double _scaleX = 1;
+        private double _scaleY = 1;
+        private Texture _texture;
 
         public Sprite()
         {
@@ -52,10 +47,22 @@ namespace Engine
             get { return _vertexUVs; }
         }
 
+        public double ScaleX
+        {
+            get { return _scaleX; }
+        }
+
+        public double ScaleY
+        {
+            get { return _scaleY; }
+        }
+
+        public static int Speed { get; set; }
+
         private Vector GetCenter()
         {
-            double halfWidth = GetWidth() / 2;
-            double halfHeight = GetHeight() / 2;
+            double halfWidth = GetWidth()/2;
+            double halfHeight = GetHeight()/2;
 
 
             return new Vector(
@@ -66,8 +73,8 @@ namespace Engine
 
         private void InitVertexPositions(Vector position, double width, double height)
         {
-            double halfWidth = width / 2;
-            double halfHeight = height / 2;
+            double halfWidth = width/2;
+            double halfHeight = height/2;
             // Clockwise creation of two triangles to make a quad.
 
             // TopLeft, TopRight, BottomLeft
@@ -115,7 +122,7 @@ namespace Engine
 
         public void SetColor(Color color)
         {
-            for (int i = 0; i < Sprite.VertexAmount; i++)
+            for (int i = 0; i < VertexAmount; i++)
             {
                 _vertexColors[i] = color;
             }
@@ -132,28 +139,11 @@ namespace Engine
             _vertexUVs[3] = new Point(bottomRight.X, topLeft.Y);
             _vertexUVs[4] = bottomRight;
             _vertexUVs[5] = new Point(topLeft.X, bottomRight.Y);
-
         }
 
         public Vector GetPosition()
         {
             return GetCenter();
-        }
-
-        public double ScaleX
-        {
-            get
-            {
-                return _scaleX;
-            }
-        }
-
-        public double ScaleY
-        {
-            get
-            {
-                return _scaleY;
-            }
         }
 
         public void ApplyMatrix(Matrix m)
@@ -166,7 +156,7 @@ namespace Engine
 
         public void SetPosition(Vector position)
         {
-            Matrix m = new Matrix();
+            var m = new Matrix();
             m.SetTranslation(new Vector(_positionX, _positionY, 0));
             ApplyMatrix(m.Inverse());
             m.SetTranslation(position);
@@ -180,7 +170,7 @@ namespace Engine
             double oldX = _positionX;
             double oldY = _positionY;
             SetPosition(0, 0);
-            Matrix mScale = new Matrix();
+            var mScale = new Matrix();
             mScale.SetScale(new Vector(_scaleX, _scaleY, 1));
             mScale = mScale.Inverse();
             ApplyMatrix(mScale);
@@ -197,7 +187,7 @@ namespace Engine
             double oldX = _positionX;
             double oldY = _positionY;
             SetPosition(0, 0);
-            Matrix mRot = new Matrix();
+            var mRot = new Matrix();
             mRot.SetRotate(new Vector(0, 0, 1), _rotation);
             ApplyMatrix(mRot.Inverse());
             mRot = new Matrix();
@@ -206,8 +196,5 @@ namespace Engine
             SetPosition(oldX, oldY);
             _rotation = rotation;
         }
-
-
-        public static int Speed { get; set; }
     }
 }

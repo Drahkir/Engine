@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Engine
 {
     public class Font
     {
-        Texture _texture;
-        Dictionary<char, CharacterData> _characterData;
+        private readonly Dictionary<char, CharacterData> _characterData;
+        private Texture _texture;
 
         public Font(Texture texture, Dictionary<char, CharacterData> characterData)
         {
@@ -23,7 +21,7 @@ namespace Engine
 
         public Vector MeasureFont(string text, double maxWidth)
         {
-            Vector dimensions = new Vector();
+            var dimensions = new Vector();
 
             foreach (char c in text)
             {
@@ -37,14 +35,14 @@ namespace Engine
         public CharacterSprite CreateSprite(char c)
         {
             CharacterData charData = _characterData[c];
-            Sprite sprite = new Sprite();
+            var sprite = new Sprite();
             sprite.Texture = _texture;
 
             // Setup UVs
-            Point topLeft = new Point((float)charData.X / (float)_texture.Width,
-                                        (float)charData.Y / (float)_texture.Height);
-            Point bottomRight = new Point(topLeft.X + ((float)charData.Width / (float)_texture.Width),
-                                          topLeft.Y + ((float)charData.Height / (float)_texture.Height));
+            var topLeft = new Point(charData.X/(float) _texture.Width,
+                charData.Y/(float) _texture.Height);
+            var bottomRight = new Point(topLeft.X + (charData.Width/(float) _texture.Width),
+                topLeft.Y + (charData.Height/(float) _texture.Height));
             sprite.SetUVs(topLeft, bottomRight);
             sprite.SetWidth(charData.Width);
             sprite.SetHeight(charData.Height);
@@ -53,6 +51,4 @@ namespace Engine
             return new CharacterSprite(sprite, charData);
         }
     }
-
-
 }

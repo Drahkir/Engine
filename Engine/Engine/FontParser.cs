@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Engine
 {
     /// <summary>
-    /// This parser doesn't support kerning! It's also quite brittle and will die on unexpected input.
-    /// 
-    /// 
-    /// Kerning is the minor adjustments made to certain characters when they're next to each other.
-    /// Implementing kerning will make your text look a lot better!
-    /// 
-    /// But it's easy to add - you need to fill in a dictionary that
-    /// takes a pair of characters for key and returns an int kerning amount.
-    /// such as: Dictionary<Tuple<char, char>, int>> (this definition requires C# 4.0)
+    ///     This parser doesn't support kerning! It's also quite brittle and will die on unexpected input.
+    ///     Kerning is the minor adjustments made to certain characters when they're next to each other.
+    ///     Implementing kerning will make your text look a lot better!
+    ///     But it's easy to add - you need to fill in a dictionary that
+    ///     takes a pair of characters for key and returns an int kerning amount.
+    ///     such as: Dictionary<Tuple<char, char>, int>> (this definition requires C# 4.0)
     /// </summary>
     public class FontParser
     {
-        static int HeaderSize = 4;
+        private static int HeaderSize = 4;
 
         // Gets the value after an equal sign and converts it
         // from a string to an integer
@@ -31,7 +26,7 @@ namespace Engine
 
         public static Dictionary<char, CharacterData> Parse(string filePath)
         {
-            Dictionary<char, CharacterData> charDictionary = new Dictionary<char, CharacterData>();
+            var charDictionary = new Dictionary<char, CharacterData>();
 
             string[] lines = File.ReadAllLines(filePath);
 
@@ -43,7 +38,7 @@ namespace Engine
 
                 // All the data comes in a certain order,
                 // used to make the parser shorter
-                CharacterData charData = new CharacterData
+                var charData = new CharacterData
                 {
                     Id = GetValue(typesAndValues[1]),
                     X = GetValue(typesAndValues[2]),
@@ -54,10 +49,9 @@ namespace Engine
                     YOffset = GetValue(typesAndValues[7]),
                     XAdvance = GetValue(typesAndValues[8])
                 };
-                charDictionary.Add((char)charData.Id, charData);
+                charDictionary.Add((char) charData.Id, charData);
             }
             return charDictionary;
         }
     }
-
 }

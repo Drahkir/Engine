@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Engine
 {
     public class PreciseTimer
     {
-        [System.Security.SuppressUnmanagedCodeSecurity]
-        [DllImport("kernel32")]
-        private static extern bool QueryPerformanceFrequency(ref long PerformanceFrequency);
-
-        [System.Security.SuppressUnmanagedCodeSecurity]
-        [DllImport("kernel32")]
-        private static extern bool QueryPerformanceCounter(ref long PerformanceCount);
-
-        long _ticksPerSecond = 0;
-        long _previousElapsedTime = 0;
+        private readonly long _ticksPerSecond;
+        private long _previousElapsedTime;
 
         public PreciseTimer()
         {
@@ -25,12 +14,20 @@ namespace Engine
             GetElapsedTime(); // Get rid of first rubbish result
         }
 
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32")]
+        private static extern bool QueryPerformanceFrequency(ref long PerformanceFrequency);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32")]
+        private static extern bool QueryPerformanceCounter(ref long PerformanceCount);
+
         public double GetElapsedTime()
         {
             long time = 0;
             QueryPerformanceCounter(ref time);
 
-            double elapsedTime = (double)(time - _previousElapsedTime) / (double)_ticksPerSecond;
+            double elapsedTime = (time - _previousElapsedTime)/(double) _ticksPerSecond;
             _previousElapsedTime = time;
 
             return elapsedTime;

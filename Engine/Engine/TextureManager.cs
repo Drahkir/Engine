@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tao.OpenGl;
+using System.Diagnostics;
 using Tao.DevIl;
+using Tao.OpenGl;
 
 namespace Engine
 {
     public class TextureManager : IDisposable
     {
-        Dictionary<string, Texture> _textureDatabase = new Dictionary<string, Texture>();
+        private readonly Dictionary<string, Texture> _textureDatabase = new Dictionary<string, Texture>();
 
         public Texture Get(string textureId)
         {
@@ -24,7 +23,7 @@ namespace Engine
 
             if (!Il.ilLoadImage(path))
             {
-                System.Diagnostics.Debug.Assert(false,
+                Debug.Assert(false,
                     "Could not open file, [" + path + "].");
             }
 
@@ -34,12 +33,11 @@ namespace Engine
             int height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT);
             int openGLId = Ilut.ilutGLBindTexImage();
 
-            System.Diagnostics.Debug.Assert(openGLId != 0);
+            Debug.Assert(openGLId != 0);
             Il.ilDeleteImages(1, ref devilId);
 
             _textureDatabase.Add(textureId, new Texture(openGLId, width, height));
         }
-
 
         #region IDisposable Members
 
@@ -47,11 +45,10 @@ namespace Engine
         {
             foreach (Texture t in _textureDatabase.Values)
             {
-                Gl.glDeleteTextures(1, new int[] { t.Id });
+                Gl.glDeleteTextures(1, new[] {t.Id});
             }
         }
 
         #endregion
-
     }
 }

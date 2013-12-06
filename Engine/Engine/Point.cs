@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+
 namespace Engine
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -18,5 +15,4 @@ namespace Engine
             Y = y;
         }
     }
-
 }

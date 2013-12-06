@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Engine
 {
     public class Button
     {
-        EventHandler _onPressEvent;
-        Text _label;
-        Vector _position = new Vector();
-
-        public Vector Position
-        {
-            get { return _position; }
-            set { _position = value; UpdatePosition(); }
-        }
+        private readonly Text _label;
+        private readonly EventHandler _onPressEvent;
+        private Vector _position;
 
         public Button(EventHandler onPressEvent, Text label)
         {
@@ -25,10 +16,20 @@ namespace Engine
             UpdatePosition();
         }
 
+        public Vector Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                UpdatePosition();
+            }
+        }
+
         public void UpdatePosition()
         {
             // Center label text on position.
-            _label.SetPosition(_position.X - (_label.Width / 2), _position.Y + (_label.Height / 2));
+            _label.SetPosition(_position.X - (_label.Width/2), _position.Y + (_label.Height/2));
         }
 
         public void OnGainFocus()

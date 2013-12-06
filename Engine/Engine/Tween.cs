@@ -1,20 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Engine
 {
     public class Tween
     {
-        double _original;
-        double _distance;
-        double _current;
-        double _totalTimePassed = 0;
-        double _totalDuration = 5;
-        bool _finished = false;
-        TweenFunction _tweenF = null;
         public delegate double TweenFunction(double timePassed, double start, double distance, double duration);
+
+        private double _current;
+        private double _distance;
+        private bool _finished;
+        private double _original;
+        private double _totalDuration = 5;
+        private double _totalTimePassed;
+        private TweenFunction _tweenF;
+
+        public Tween(double start, double end, double time)
+        {
+            Construct(start, end, time, Linear);
+        }
+
+        public Tween(double start, double end, double time, TweenFunction tweenF)
+        {
+            Construct(start, end, time, tweenF);
+        }
 
         public double Value()
         {
@@ -28,17 +36,7 @@ namespace Engine
 
         public static double Linear(double timePassed, double start, double distance, double duration)
         {
-            return distance * timePassed / duration + start;
-        }
-
-        public Tween(double start, double end, double time)
-        {
-            Construct(start, end, time, Tween.Linear);
-        }
-
-        public Tween(double start, double end, double time, TweenFunction tweenF)
-        {
-            Construct(start, end, time, tweenF);
+            return distance*timePassed/duration + start;
         }
 
         public void Construct(double start, double end, double time, TweenFunction tweenF)
@@ -69,28 +67,26 @@ namespace Engine
                 return start + distance;
             }
 
-            return distance * (-Math.Pow(2, -10 * timePassed / duration) + 1) + start;
+            return distance*(-Math.Pow(2, -10*timePassed/duration) + 1) + start;
         }
 
-        public static double EaseInExpo(double timePassed, double start, double distance, double duration) {
+        public static double EaseInExpo(double timePassed, double start, double distance, double duration)
+        {
             if (timePassed == 0)
             {
                 return start;
             }
-            else
-            {
-                return distance * Math.Pow(2, 10 * (timePassed / duration - 1)) + start;
-            }
+            return distance*Math.Pow(2, 10*(timePassed/duration - 1)) + start;
         }
 
         public static double EaseOutCirc(double timePassed, double start, double distance, double duration)
         {
-            return distance * Math.Sqrt(1 - (timePassed = timePassed / duration - 1) * timePassed) + start;
+            return distance*Math.Sqrt(1 - (timePassed = timePassed/duration - 1)*timePassed) + start;
         }
 
         public static double EaseInCirc(double timePassed, double start, double distance, double duration)
         {
-            return -distance * (Math.Sqrt(1 - (timePassed /= duration) * timePassed) - 1) + start;
+            return -distance*(Math.Sqrt(1 - (timePassed /= duration)*timePassed) - 1) + start;
         }
     }
 }

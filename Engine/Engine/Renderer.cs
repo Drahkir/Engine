@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tao.OpenGl;
+﻿using Tao.OpenGl;
+
 namespace Engine
 {
     public class Renderer
     {
-        int _currentTextureId = -1;
+        private readonly Batch _batch = new Batch();
+        private int _currentTextureId = -1;
 
         public Renderer()
         {
@@ -22,8 +20,6 @@ namespace Engine
             Gl.glTexCoord2f(uvs.X, uvs.Y);
             Gl.glVertex3d(position.X, position.Y, position.Z);
         }
-
-        Batch _batch = new Batch();
 
         public void DrawSprite(Sprite sprite)
         {
@@ -53,9 +49,6 @@ namespace Engine
             {
                 DrawSprite(c.Sprite);
             }
-
         }
     }
-
-
 }

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Engine
 {
     public class StateSystem
     {
-        Dictionary<string, IGameObject> _stateStore = new Dictionary<string, IGameObject>();
-        IGameObject _currentState = null;
+        private readonly Dictionary<string, IGameObject> _stateStore = new Dictionary<string, IGameObject>();
+        private IGameObject _currentState;
+
         public void Update(double elapsedTime)
         {
             if (_currentState == null)
@@ -29,18 +28,18 @@ namespace Engine
 
         public void AddState(string stateId, IGameObject state)
         {
-            System.Diagnostics.Debug.Assert(Exists(stateId) == false);
+            Debug.Assert(Exists(stateId) == false);
             _stateStore.Add(stateId, state);
         }
 
         public void ChangeState(string stateId)
         {
-            System.Diagnostics.Debug.Assert(Exists(stateId));
+            Debug.Assert(Exists(stateId));
             _currentState = _stateStore[stateId];
         }
 
         /// <summary>
-        /// Check if a state exists.
+        ///     Check if a state exists.
         /// </summary>
         /// <param name="stateId">The id of the state to check.</param>
         /// <returns>True for an existant state otherwise false</returns>

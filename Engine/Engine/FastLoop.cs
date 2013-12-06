@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Security;
+using System.Windows.Forms;
 
 namespace Engine
 {
@@ -20,7 +18,18 @@ namespace Engine
 
     public class FastLoop
     {
-        [System.Security.SuppressUnmanagedCodeSecurity]
+        public delegate void LoopCallback(double elapsedTime);
+
+        private readonly LoopCallback _callback;
+        private readonly PreciseTimer _timer = new PreciseTimer();
+
+        public FastLoop(LoopCallback callback)
+        {
+            _callback = callback;
+            Application.Idle += OnApplicationEnterIdle;
+        }
+
+        [SuppressUnmanagedCodeSecurity]
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern bool PeekMessage(
             out Message msg,
@@ -29,17 +38,7 @@ namespace Engine
             uint messageFilterMax,
             uint flags);
 
-        PreciseTimer _timer = new PreciseTimer();
-        public delegate void LoopCallback(double elapsedTime);
-        LoopCallback _callback;
-
-        public FastLoop(LoopCallback callback)
-        {
-            _callback = callback;
-            Application.Idle += new EventHandler(OnApplicationEnterIdle);
-        }
-
-        void OnApplicationEnterIdle(object sender, EventArgs e)
+        private void OnApplicationEnterIdle(object sender, EventArgs e)
         {
             while (IsAppStillIdle())
             {
@@ -52,7 +51,5 @@ namespace Engine
             Message msg;
             return !PeekMessage(out msg, IntPtr.Zero, 0, 0, 0);
         }
-
     }
-
 }

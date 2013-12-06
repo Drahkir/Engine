@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Tao.Sdl;
 
 namespace Engine.Input
@@ -9,6 +6,30 @@ namespace Engine.Input
     public class XboxController : IDisposable
     {
         // Analog Sticks
+        private readonly IntPtr _joystick;
+
+        public XboxController(int player)
+        {
+            _joystick = Sdl.SDL_JoystickOpen(player);
+
+            LeftControlStick = new ControlStick(_joystick, 0, 1);
+            RightControlStick = new ControlStick(_joystick, 4, 3);
+
+            ButtonA = new ControllerButton(_joystick, 0);
+            ButtonB = new ControllerButton(_joystick, 1);
+            ButtonX = new ControllerButton(_joystick, 2);
+            ButtonY = new ControllerButton(_joystick, 3);
+            ButtonLB = new ControllerButton(_joystick, 4);
+            ButtonRB = new ControllerButton(_joystick, 5);
+            ButtonBack = new ControllerButton(_joystick, 6);
+            ButtonStart = new ControllerButton(_joystick, 7);
+            ButtonL3 = new ControllerButton(_joystick, 8);
+            ButtonR3 = new ControllerButton(_joystick, 9);
+            RightTrigger = new ControlTrigger(_joystick, 2, false);
+            LeftTrigger = new ControlTrigger(_joystick, 2, true);
+            Dpad = new DPad(_joystick, 0);
+        }
+
         public ControlStick LeftControlStick { get; private set; }
         public ControlStick RightControlStick { get; private set; }
 
@@ -37,30 +58,6 @@ namespace Engine.Input
         // Digital Pad
         public DPad Dpad { get; private set; }
 
-
-        IntPtr _joystick;
-
-        public XboxController(int player)
-        {
-            _joystick = Sdl.SDL_JoystickOpen(player);
-
-            LeftControlStick = new ControlStick(_joystick, 0, 1);
-            RightControlStick = new ControlStick(_joystick, 4, 3);
-
-            ButtonA = new ControllerButton(_joystick, 0);
-            ButtonB = new ControllerButton(_joystick, 1);
-            ButtonX = new ControllerButton(_joystick, 2);
-            ButtonY = new ControllerButton(_joystick, 3);
-            ButtonLB = new ControllerButton(_joystick, 4);
-            ButtonRB = new ControllerButton(_joystick, 5);
-            ButtonBack = new ControllerButton(_joystick, 6);
-            ButtonStart = new ControllerButton(_joystick, 7);
-            ButtonL3 = new ControllerButton(_joystick, 8);
-            ButtonR3 = new ControllerButton(_joystick, 9);
-            RightTrigger = new ControlTrigger(_joystick, 2, false);
-            LeftTrigger = new ControlTrigger(_joystick, 2, true);
-            Dpad = new DPad(_joystick, 0);
-        }
 
         public void Update()
         {

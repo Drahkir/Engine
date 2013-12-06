@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Tao.Sdl;
 
 namespace Engine.Input
 {
     public class ControlTrigger
     {
-        IntPtr _joystick;
-        int _index;
-        bool _top = false; // The triggers are treated as axes and need splitting up
-        float _deadZone = 0.24f;
-        public float Value { get; private set; }
+        private readonly int _index;
+        private readonly IntPtr _joystick;
+        private readonly bool _top; // The triggers are treated as axes and need splitting up
+        private float _deadZone = 0.24f;
 
         public ControlTrigger(IntPtr joystick, int index, bool top)
         {
@@ -21,6 +17,8 @@ namespace Engine.Input
             _top = top;
         }
 
+        public float Value { get; private set; }
+
         public void Update()
         {
             Value = MapZeroToOne(Sdl.SDL_JoystickGetAxis(_joystick, _index));
@@ -28,7 +26,7 @@ namespace Engine.Input
 
         private float MapZeroToOne(short value)
         {
-            float output = ((float)value / short.MaxValue);
+            float output = ((float) value/short.MaxValue);
 
             if (!_top)
             {

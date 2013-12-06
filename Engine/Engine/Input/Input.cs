@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tao.Sdl;
+﻿using Tao.Sdl;
 
 namespace Engine.Input
 {
     public class Input
     {
-        public Mouse Mouse { get; set; }
-        public Keyboard Keyboard { get; set; }
-        public Point MousePosition { get; set; }
-        bool _usingController = false;
-        public XboxController Controller { get; set; }
+        private readonly bool _usingController;
 
         public Input()
         {
@@ -24,6 +16,11 @@ namespace Engine.Input
                 _usingController = true;
             }
         }
+
+        public Mouse Mouse { get; set; }
+        public Keyboard Keyboard { get; set; }
+        public Point MousePosition { get; set; }
+        public XboxController Controller { get; set; }
 
         public void Update(double elapsedTime)
         {

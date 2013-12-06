@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Tao.Sdl;
 
 namespace Engine.Input
 {
     public class DPad
     {
-        IntPtr _joystick;
-        int _index;
-
-        public bool LeftHeld { get; private set; }
-        public bool RightHeld { get; private set; }
-        public bool UpHeld { get; private set; }
-        public bool DownHeld { get; private set; }
+        private readonly int _index;
+        private readonly IntPtr _joystick;
 
         public DPad(IntPtr joystick, int index)
         {
             _joystick = joystick;
             _index = index;
         }
+
+        public bool LeftHeld { get; private set; }
+        public bool RightHeld { get; private set; }
+        public bool UpHeld { get; private set; }
+        public bool DownHeld { get; private set; }
 
         public void Update()
         {
